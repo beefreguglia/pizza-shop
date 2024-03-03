@@ -1,4 +1,7 @@
-import { Building, LogOut } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { Building, ChevronDown, LogOut } from 'lucide-react'
+
+import { getProfile } from '@/api/get-profile'
 
 import { Button } from './ui/button'
 import {
@@ -9,25 +12,52 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
+import { Skeleton } from './ui/skeleton'
 
 export function AccountMenu() {
+  const { data: profile, isLoading: isLoadingProfile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfile,
+  })
+
+  const { data: managedRestaurant, isLoading: isLoadingManagedRestaurant } =
+    useQuery({
+      queryKey: ['managed-restaurant'],
+      queryFn: getProfile,
+    })
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="flex select-none select-none items-center gap-2"
+          className="flex select-none items-center gap-2"
         >
-          Pizza Shop
+          {isLoadingManagedRestaurant ? (
+            <Skeleton className="h-4 w-36" />
+          ) : (
+            managedRestaurant?.name
+          )}
+
+          <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenu>
           <DropdownMenuLabel className="flex flex-col">
-            <span>Bernardo Freguglia</span>
-            <span className="text-xs font-normal text-muted-foreground">
-              b.freguglia@gmail.com
-            </span>
+            {isLoadingProfile ? (
+              <div className="space-y-1.5">
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-3 w-20" />
+              </div>
+            ) : (
+              <>
+                <span>{profile?.name}</span>
+                <span className="text-xs font-normal text-muted-foreground">
+                  {profile?.email}
+                </span>
+              </>
+            )}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
