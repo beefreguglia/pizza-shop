@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios'
+import { OrderStatusType } from '@/types/order-status'
 
 export interface GetOrdersQuery {
   pageIndex?: number | null
@@ -6,13 +7,6 @@ export interface GetOrdersQuery {
   customerName?: string | null
   status?: string | null
 }
-
-export type OrderStatusType =
-  | 'pending'
-  | 'canceled'
-  | 'processing'
-  | 'delivering'
-  | 'delivered'
 
 export interface Order {
   orderId: string

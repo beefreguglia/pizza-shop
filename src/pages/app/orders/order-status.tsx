@@ -1,4 +1,4 @@
-import { OrderStatusType } from '@/api/get-orders'
+import { OrderStatusProps as OrderStatusType } from '@/types/order-status'
 import { orderStatusMap } from '@/utils/translator/translate-order-status'
 
 interface OrderStatusProps {
