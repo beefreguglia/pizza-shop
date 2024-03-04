@@ -1,5 +1,8 @@
+import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
+import { useSearchParams } from 'react-router-dom'
 
+import { getOrders } from '@/api/get-orders'
 import { Pagination } from '@/components/pagination'
 import {
   Table,
@@ -8,11 +11,36 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { transformPageInPageIndex } from '@/utils/transform/transform-page-page-index'
 
 import { OrderTableFilters } from './order-table-filters'
 import { OrderTableRow } from './order-table-row'
 
 export function Orders() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const pageIndex = transformPageInPageIndex(searchParams)
+  const orderId = searchParams.get('orderId')
+  const customerName = searchParams.get('customerName')
+  const status = searchParams.get('status')
+
+  const { data: ordersResponse } = useQuery({
+    queryKey: ['orders', pageIndex, orderId, customerName, status],
+    queryFn: () =>
+      getOrders({
+        pageIndex,
+        customerName,
+        orderId,
+        status: status === 'all' ? null : status,
+      }),
+  })
+
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((state) => {
+      state.set('page', (pageIndex + 1).toString())
+      return state
+    })
+  }
+
   return (
     <>
       <Helmet title="Pedidos" />
@@ -35,13 +63,21 @@ export function Orders() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {Array.from({ length: 10 }).map((_, i) => {
-                  return <OrderTableRow key={i} />
-                })}
+                {ordersResponse &&
+                  ordersResponse.orders.map((order) => {
+                    return <OrderTableRow key={order.orderId} order={order} />
+                  })}
               </TableBody>
             </Table>
           </div>
-          <Pagination pageIndex={0} perPage={10} totalCount={105} />
+          {ordersResponse && (
+            <Pagination
+              pageIndex={ordersResponse.meta.pageIndex}
+              perPage={ordersResponse.meta.perPage}
+              totalCount={ordersResponse.meta.totalCount}
+              onPageChange={handlePaginate}
+            />
+          )}
         </div>
       </div>
     </>
