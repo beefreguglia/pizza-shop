@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { getManagedRestaurant } from '@/api/get-managed-restaurant'
 import { getProfile } from '@/api/get-profile'
-import { signOut } from '@/api/sign-out'
+import { postSignOut } from '@/api/post-sign-out'
 
 import { StoreProfileDialog } from './store-profile-dialog'
 import { Button } from './ui/button'
@@ -39,7 +39,7 @@ export function AccountMenu() {
   const navigate = useNavigate()
 
   const { mutateAsync: signOutFn, isPending: isSigningOut } = useMutation({
-    mutationFn: signOut,
+    mutationFn: postSignOut,
     onSuccess: () => {
       navigate('/sign-in', { replace: true })
     },
