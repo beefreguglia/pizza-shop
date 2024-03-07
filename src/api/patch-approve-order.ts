@@ -3,11 +3,11 @@ import { CustomerProps } from '@/types/customer'
 import { OrderItemProps } from '@/types/order-item'
 import { OrderStatusProps } from '@/types/order-status'
 
-interface PatchCancelOrderParams {
+interface PatchApproveOrderParams {
   orderId: string
 }
 
-interface PatchCancelOrderResponse {
+interface PatchApproveOrderResponse {
   id: string
   createdAt: string
   status: OrderStatusProps
@@ -16,6 +16,6 @@ interface PatchCancelOrderResponse {
   orderItems: OrderItemProps[]
 }
 
-export async function patchCancelOrder({ orderId }: PatchCancelOrderParams) {
-  await api.patch<PatchCancelOrderResponse>(`/orders/${orderId}/cancel`)
+export async function patchApproveOrder({ orderId }: PatchApproveOrderParams) {
+  await api.patch<PatchApproveOrderResponse>(`/orders/${orderId}/approve`)
 }

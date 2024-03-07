@@ -5,7 +5,10 @@ import { ArrowRight, Search, X } from 'lucide-react'
 import { useState } from 'react'
 
 import { GetOrdersResponse, Order } from '@/api/get-orders'
+import { patchApproveOrder } from '@/api/patch-approve-order'
 import { patchCancelOrder } from '@/api/patch-cancel-order'
+import { patchDeliverOrder } from '@/api/patch-deliver-order'
+import { patchDispatchOrder } from '@/api/patch-dispatch-order'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { TableCell, TableRow } from '@/components/ui/table'
@@ -46,12 +49,35 @@ export function OrderTableRow({ order }: OrderTableRowProps) {
       })
     })
   }
-  const { mutateAsync: cancelOrderFn } = useMutation({
-    mutationFn: patchCancelOrder,
-    async onSuccess(_, { orderId }) {
-      updateOrderStatusOnCache(orderId, 'canceled')
-    },
-  })
+
+  const { mutateAsync: cancelOrderFn, isPending: isCancelingOrder } =
+    useMutation({
+      mutationFn: patchCancelOrder,
+      async onSuccess(_, { orderId }) {
+        updateOrderStatusOnCache(orderId, 'canceled')
+      },
+    })
+  const { mutateAsync: approveOrderFn, isPending: isApprovingOrder } =
+    useMutation({
+      mutationFn: patchApproveOrder,
+      async onSuccess(_, { orderId }) {
+        updateOrderStatusOnCache(orderId, 'processing')
+      },
+    })
+  const { mutateAsync: dispatchOrderFn, isPending: isDispatchingOrder } =
+    useMutation({
+      mutationFn: patchDispatchOrder,
+      async onSuccess(_, { orderId }) {
+        updateOrderStatusOnCache(orderId, 'delivering')
+      },
+    })
+  const { mutateAsync: deliverOrderFn, isPending: isDeliveringOrder } =
+    useMutation({
+      mutationFn: patchDeliverOrder,
+      async onSuccess(_, { orderId }) {
+        updateOrderStatusOnCache(orderId, 'delivered')
+      },
+    })
 
   return (
     <TableRow>
@@ -83,14 +109,46 @@ export function OrderTableRow({ order }: OrderTableRowProps) {
         {translatePriceInCentsInCurrency(order.total / 100)}
       </TableCell>
       <TableCell>
-        <Button variant="outline" size="xs">
-          <ArrowRight className="mr-2 h-3 w-3" />
-          Aprovar
-        </Button>
+        {order.status === 'pending' && (
+          <Button
+            onClick={() => approveOrderFn({ orderId: order.orderId })}
+            variant="outline"
+            size="xs"
+            disabled={isApprovingOrder}
+          >
+            <ArrowRight className="mr-2 h-3 w-3" />
+            Aprovar
+          </Button>
+        )}
+        {order.status === 'processing' && (
+          <Button
+            onClick={() => dispatchOrderFn({ orderId: order.orderId })}
+            variant="outline"
+            size="xs"
+            disabled={isDispatchingOrder}
+          >
+            <ArrowRight className="mr-2 h-3 w-3" />
+            Em entrega
+          </Button>
+        )}
+        {order.status === 'delivering' && (
+          <Button
+            onClick={() => deliverOrderFn({ orderId: order.orderId })}
+            variant="outline"
+            size="xs"
+            disabled={isDeliveringOrder}
+          >
+            <ArrowRight className="mr-2 h-3 w-3" />
+            Entregue
+          </Button>
+        )}
       </TableCell>
       <TableCell>
         <Button
-          disabled={!['pending', 'processing'].includes(order.status)}
+          disabled={
+            !['pending', 'processing'].includes(order.status) ||
+            isCancelingOrder
+          }
           onClick={() => cancelOrderFn({ orderId: order.orderId })}
           variant="ghost"
           size="xs"
