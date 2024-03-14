@@ -15,8 +15,8 @@ import { TableCell, TableRow } from '@/components/ui/table'
 import { OrderStatusProps } from '@/types/order-status'
 import { translatePriceInCentsInCurrency } from '@/utils/translator/tranlate-price-in-cents-in-currency'
 
+import { OrderStatus } from '../../../components/order-status'
 import { OrderDetails } from './order-details'
-import { OrderStatus } from './order-status'
 
 interface OrderTableRowProps {
   order: Order

@@ -21,7 +21,7 @@ import {
 import { translatePriceInCentsInCurrency } from '@/utils/translator/tranlate-price-in-cents-in-currency'
 
 import { OrderDetailsSkeleton } from './order-details-skeleton'
-import { OrderStatus } from './order-status'
+import { OrderStatus } from '../../../components/order-status'
 
 export interface OrderDetailsProps {
   orderId: string
