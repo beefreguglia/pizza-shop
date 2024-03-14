@@ -15,6 +15,7 @@ import { transformPageInPageIndex } from '@/utils/transform/transform-page-page-
 
 import { OrderTableFilters } from './order-table-filters'
 import { OrderTableRow } from './order-table-row'
+import { OrderTableSkeleton } from './order-table-skeleton'
 
 export function Orders() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -23,7 +24,7 @@ export function Orders() {
   const customerName = searchParams.get('customerName')
   const status = searchParams.get('status')
 
-  const { data: ordersResponse } = useQuery({
+  const { data: ordersResponse, isLoading: isLoadingOrders } = useQuery({
     queryKey: ['orders', pageIndex, orderId, customerName, status],
     queryFn: () =>
       getOrders({
@@ -63,6 +64,7 @@ export function Orders() {
                 </TableRow>
               </TableHeader>
               <TableBody>
+                {isLoadingOrders && <OrderTableSkeleton />}
                 {ordersResponse &&
                   ordersResponse.orders.map((order) => {
                     return <OrderTableRow key={order.orderId} order={order} />

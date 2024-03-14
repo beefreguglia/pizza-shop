@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/table'
 import { translatePriceInCentsInCurrency } from '@/utils/translator/tranlate-price-in-cents-in-currency'
 
+import { OrderDetailsSkeleton } from './order-details-skeleton'
 import { OrderStatus } from './order-status'
 
 export interface OrderDetailsProps {
@@ -40,7 +41,7 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
         <DialogTitle>Pedido: {orderId}</DialogTitle>
         <DialogDescription>Detalhes do pedido</DialogDescription>
       </DialogHeader>
-      {order && (
+      {order ? (
         <div className="space-y-6">
           <Table>
             <TableBody>
@@ -72,12 +73,13 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="text-muted-foreground">
+                  Realizado há
+                </TableCell>
+                <TableCell className="flex justify-end">
                   {formatDistanceToNow(order.createdAt, {
                     locale: ptBR,
-                    addSuffix: true,
                   })}
                 </TableCell>
-                <TableCell className="flex justify-end">há 3 minutos</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -124,6 +126,8 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
             </TableFooter>
           </Table>
         </div>
+      ) : (
+        <OrderDetailsSkeleton />
       )}
     </DialogContent>
   )
