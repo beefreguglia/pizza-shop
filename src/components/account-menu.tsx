@@ -22,6 +22,7 @@ import { Skeleton } from './ui/skeleton'
 
 export function AccountMenu() {
   const [isOpenModal, setIsOpenModal] = useState(false)
+  const [isOpenDropdown, setIsOpenDropdown] = useState(false)
 
   const { data: profile, isLoading: isLoadingProfile } = useQuery({
     queryKey: ['profile'],
@@ -49,9 +50,13 @@ export function AccountMenu() {
     setIsOpenModal(false)
   }
 
+  function handleCloseDropdown() {
+    setIsOpenDropdown(false)
+  }
+
   return (
     <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
-      <DropdownMenu>
+      <DropdownMenu open={isOpenDropdown} onOpenChange={setIsOpenDropdown}>
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
@@ -85,7 +90,7 @@ export function AccountMenu() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DialogTrigger asChild>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleCloseDropdown()}>
                 <Building className="mr-2 h-4 w-4" />
                 <span>Perfil da loja</span>
               </DropdownMenuItem>
