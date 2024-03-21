@@ -12,6 +12,10 @@ import { getOrderDetailsMock } from './get-order-details-mock'
 import { getOrdersMock } from './get-orders-mock'
 import { getPopularProductsMock } from './get-popular-products-mock'
 import { getProfileMock } from './get-profile-mock'
+import { patchApproveOrderMock } from './patch-approve-order-mock'
+import { patchCancelOrderMock } from './patch-cancel-order-mock'
+import { patchDeliverOrderMock } from './patch-deliver-order-mock'
+import { patchDispatchOrderMock } from './patch-dispatch-order-mock'
 import { postRegisterRestaurantMock } from './post-register-restaurant-mock'
 import { postSignInMock } from './post-sign-in-mock'
 import { putProfileMock } from './put-profile-mock'
@@ -30,6 +34,10 @@ export const mswWorker = setupWorker(
   putProfileMock,
   getOrdersMock,
   getOrderDetailsMock,
+  patchApproveOrderMock,
+  patchCancelOrderMock,
+  patchDeliverOrderMock,
+  patchDispatchOrderMock,
 )
 
 export async function enableMSW() {
