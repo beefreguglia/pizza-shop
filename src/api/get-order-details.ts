@@ -3,11 +3,11 @@ import { CustomerProps } from '@/types/customer'
 import { OrderItemProps } from '@/types/order-item'
 import { OrderStatusProps } from '@/types/order-status'
 
-interface GetOrderDetailsParams {
+export interface GetOrderDetailsParams {
   orderId: string
 }
 
-interface GetOrderDetailsResponse {
+export interface GetOrderDetailsResponse {
   id: string
   createdAt: string
   status: OrderStatusProps

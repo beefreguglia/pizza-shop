@@ -1,5 +1,5 @@
 import { api } from '@/lib/axios'
-import { OrderStatusType } from '@/types/order-status'
+import { OrderStatusProps } from '@/types/order-status'
 
 export interface GetOrdersQuery {
   pageIndex?: number | null
@@ -11,7 +11,7 @@ export interface GetOrdersQuery {
 export interface Order {
   orderId: string
   createdAt: string
-  status: OrderStatusType
+  status: OrderStatusProps
   customerName: string
   total: number
 }
