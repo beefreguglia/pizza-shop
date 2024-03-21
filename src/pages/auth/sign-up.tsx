@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-import { registerRestaurant } from '@/api/register-restaurant'
+import { postRegisterRestaurant } from '@/api/post-register-restaurant'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -28,7 +28,7 @@ export function SignUp() {
 
   const navigate = useNavigate()
   const { mutateAsync: registerRestaurantFn } = useMutation({
-    mutationFn: registerRestaurant,
+    mutationFn: postRegisterRestaurant,
   })
 
   async function handleSignUp(data: SignUpForm) {
